@@ -15,7 +15,9 @@ class Dashboard extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleNotificationClick = this.handleNotificationClick.bind(this);
     this.state = {
-      _notificationSystem: null
+      _notificationSystem: null,
+      teams: [],
+      players: []
     };
     this.UpdateAPI = this.UpdateAPI.bind(this);
    
@@ -28,11 +30,24 @@ class Dashboard extends Component {
     let month = today.getMonth();
     let stringDate = day + '.' + (month+1) + '.2018';
     //Start Football API Get Requests to send to the Node JS API
-   // 1. Standings
+   // 1. Standings * team data
    axios.get('http://api.football-api.com/2.0/standings/1056?Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
    .then( res => {
      let standings = res.data;
      this.setState({standings})
+     for(let i = 0; i<31;i++){
+      let team = this.state.standings[i].team_id
+      axios.get('http://api.football-api.com/2.0/team/'+team+'?Authorization=565ec012251f932ea4000001fa542ae9d994470e73fdb314a8a56d76')
+      .then( teamRes =>{
+         let newTeam = teamRes.data;
+         let teams = this.state.teams;
+         teams.push(newTeam);
+         this.setState({teams});
+        //  console.log(this.state);
+      });  
+     }
+     
+     
      // axios.post('localhost/extract/footballapi/',this.state.standings)
      // .then(postRes =>{
       //  console.log(res.data);
@@ -50,9 +65,7 @@ class Dashboard extends Component {
      // });
    });
    // 3. Teams
-    for (let i = 0; i<=31; i++){
-      
-    }
+   
 
  }
   handleNotificationClick(position) {
