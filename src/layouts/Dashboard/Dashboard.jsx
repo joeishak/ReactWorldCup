@@ -48,10 +48,7 @@ class Dashboard extends Component {
      }
      
      
-     // axios.post('localhost/extract/footballapi/',this.state.standings)
-     // .then(postRes =>{
-      //  console.log(res.data);
-     // })
+    
    });
 
    // 2. Matches
@@ -64,9 +61,12 @@ class Dashboard extends Component {
      //   console.log(res.data);
      // });
    });
-   // 3. Teams
    
-
+ axios.post('192.168.1.6:80/extract/footballapi/',this.state)
+     .then(postRes =>{
+       console.log('I got a response');
+       console.log(postRes.data);
+     })
  }
   handleNotificationClick(position) {
     var color = Math.floor(Math.random() * 4 + 1);
