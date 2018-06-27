@@ -1,0 +1,54 @@
+
+.loadingPage {
+    font-size: 5em;
+    color: white;
+    opacity: .84;
+    font-style: 5px solid white;
+
+}
+
+.loadingTitleContainer{
+    margin-top: 30px;
+    margin-bottom:50px;
+}
+.loadingContainer{
+    height: 100%;
+}
+.grid{
+    background-color:  #00c853;
+}
+
+.dashboardGrid{
+    background-color:  #00c853;
+}
+.dashboardTitleContainer{
+    background-color:  #00c853;
+    
+}
+
+.dashboardHeaderText{
+    color: white;
+    opacity: .84;
+    font-style: 5px solid white;
+    font-size: 5em;
+    
+    
+}
+
+.transition{
+    transition: opacity 500ms ease-in;
+}
+
+.selected {
+    background-color: #0087a2;
+}
+
+.flag {
+    width: 10vh;
+    height: 10vh;
+
+}
+
+.comboBox{
+    color: 'white'
+}
