@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import NotificationSystem from "react-notification-system";
-
+import axios from 'axios';
 import Header from "components/Header/Header";
 import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
@@ -17,7 +17,44 @@ class Dashboard extends Component {
     this.state = {
       _notificationSystem: null
     };
+    this.UpdateAPI = this.UpdateAPI.bind(this);
+   
   }
+  UpdateAPI(){
+    
+    
+    let today = new Date();
+    let day = today.getDate();
+    let month = today.getMonth();
+    let stringDate = day + '.' + (month+1) + '.2018';
+    //Start Football API Get Requests to send to the Node JS API
+   // 1. Standings
+   axios.get('http://api.football-api.com/2.0/standings/1056?Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
+   .then( res => {
+     let standings = res.data;
+     this.setState({standings})
+     // axios.post('localhost/extract/footballapi/',this.state.standings)
+     // .then(postRes =>{
+      //  console.log(res.data);
+     // })
+   });
+
+   // 2. Matches
+   axios.get('http://api.football-api.com/2.0/matches?comp_id=1056&from_date=1.6.2018&to_date='+stringDate+'&Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
+   .then( res => {
+     let matches = res.data;
+     this.setState({matches})
+     // axios.post('localhost/extract/footballapi/',this.state.standings)
+     // .then(postRes => {
+     //   console.log(res.data);
+     // });
+   });
+   // 3. Teams
+    for (let i = 0; i<=31; i++){
+      
+    }
+
+ }
   handleNotificationClick(position) {
     var color = Math.floor(Math.random() * 4 + 1);
     var level;
@@ -51,6 +88,7 @@ class Dashboard extends Component {
     });
   }
   componentDidMount() {
+    this.UpdateAPI();
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
     var color = Math.floor(Math.random() * 4 + 1);

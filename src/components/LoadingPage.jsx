@@ -17,7 +17,7 @@ export default class CustomLoadingPage extends Component{
     
     componentDidMount(){
         //When the component Loads
-        console.log(count);
+        // console.log(count);
         let count= 0;
         
 
