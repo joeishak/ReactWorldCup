@@ -27,7 +27,7 @@ import {
 } from "variables/Variables.jsx";
 
 function getStandingTableValues(){
-  return axios.get('http://192.168.1.2/api/football/standing-table-values')
+  // return axios.get('http://192.168.1.2/api/football/standing-table-values')
 }
 class Dashboard extends Component {
   constructor(props){
@@ -83,53 +83,53 @@ class Dashboard extends Component {
 
     //Make requests to re-initialize State with data from Node JS Server
  
-    //1. state.standingsValuesstandings
-    axios.all([getStandingTableValues()])
-    .then((response)=>{
-      console.log(response[0].data.DBResponse);
-      this.setState({standingTableValues: response[0].data.DBResponse})
-    });
-    axios({
-      method: 'get',
-      url:'http://192.168.1.2:80/api/worldcup/stadium-locations'
-    }).then((response) =>{
-      // console.log("Response from the api",response);
-      this.setState({stadiums:response.data.stadiums});
+    // //1. state.standingsValuesstandings
+    // axios.all([getStandingTableValues()])
+    // .then((response)=>{
+    //   console.log(response[0].data.DBResponse);
+    //   this.setState({standingTableValues: response[0].data.DBResponse})
+    // });
+    // axios({
+    //   method: 'get',
+    //   url:'http://192.168.1.2:80/api/worldcup/stadium-locations'
+    // }).then((response) =>{
+    //   // console.log("Response from the api",response);
+    //   this.setState({stadiums:response.data.stadiums});
  
-    });
+    // });
 
-    //Method to get Data for the Stadium Capacity
-    axios({
-      method: 'get',
-      url:'http://192.168.1.2/api/worldcup/total-stadium-capacity'
-    }).then((response) =>{
-      // console.log("Response from the api",response);
-      this.setState({totalCapacity:response.data[0]["Total Attendee Capacity"]});
+    // //Method to get Data for the Stadium Capacity
+    // axios({
+    //   method: 'get',
+    //   url:'http://192.168.1.2/api/worldcup/total-stadium-capacity'
+    // }).then((response) =>{
+    //   // console.log("Response from the api",response);
+    //   this.setState({totalCapacity:response.data[0]["Total Attendee Capacity"]});
  
-    });
+    // });
 
-    //Method to get DAta for the Stadium Capacity
-    axios({
-      method: 'get',
-      url:'http://192.168.1.2/api/worldcup/match-stadiums'
-    }).then((response) =>{
-      // console.log("Response from the Match Stadiums api",response);
-      let labels = response.data.map(stadium=>{
-        return stadium.Stadium;
-      });
-      let series = response.data.map(stadium=>{
-        return stadium["Total Matches Held"];
-      })
-      // console.log(labels);
-      // console.log(series);
-      this.setState({
-        totalMatchesAtEachStadium:{
-          labels:labels,
-          series: series
-        }
-      });
-      // console.log(this.state);
-    });
+    // //Method to get DAta for the Stadium Capacity
+    // axios({
+    //   method: 'get',
+    //   url:'http://192.168.1.2/api/worldcup/match-stadiums'
+    // }).then((response) =>{
+    //   // console.log("Response from the Match Stadiums api",response);
+    //   let labels = response.data.map(stadium=>{
+    //     return stadium.Stadium;
+    //   });
+    //   let series = response.data.map(stadium=>{
+    //     return stadium["Total Matches Held"];
+    //   })
+    //   // console.log(labels);
+    //   // console.log(series);
+    //   this.setState({
+    //     totalMatchesAtEachStadium:{
+    //       labels:labels,
+    //       series: series
+    //     }
+    //   });
+    //   // console.log(this.state);
+    // });
   }
   createLegend(json) {
     var legend = [];
@@ -244,7 +244,7 @@ class Dashboard extends Component {
   }
 
   retrieveGroupStandings(){
-    axios.get('localhost/api/football/groupstandings')
+    // axios.get('localhost/api/football/groupstandings')
   }
 
   sayHi(e){

@@ -24,9 +24,7 @@ import {
   } from "../variables/Variables.jsx";
 
 
-  function getStandingTableValues(){
-    return axios.get('http://192.168.1.2/api/football/standing-table-values')
-  }
+
 export default class App extends Component{
     
     constructor(props){
@@ -79,132 +77,127 @@ export default class App extends Component{
             }]
         }
     //   this.animateGroup = this.animateGroup.bind(this);
-    this.getTeams = this.getTeams.bind(this);
-    this.findMatch = this.findMatch.bind(this);
+    // this.getTeams = this.getTeams.bind(this);
+    // this.findMatch = this.findMatch.bind(this);
 
      //1. state.standingsValuesstandings
-     axios.all([getStandingTableValues()])
-     .then((response)=>{
-    //    console.log(response[0].data.DBResponse);
-       this.setState({standingTableValues: response[0].data.DBResponse})
-     });
-     axios({
-       method: 'get',
-       url:'http://192.168.1.2:80/api/worldcup/stadium-locations'
-     }).then((response) => {
-       // console.log("Response from the api",response);
-       this.setState({stadiums:response.data.stadiums});
+    //  axios.all([getStandingTableValues()])
+    //  .then((response)=>{
+    // //    console.log(response[0].data.DBResponse);
+    //    this.setState({standingTableValues: response[0].data.DBResponse})
+    //  });
+    //  axios({
+    //    method: 'get',
+    //    url:'http://192.168.1.2:80/api/worldcup/stadium-locations'
+    //  }).then((response) => {
+    //    // console.log("Response from the api",response);
+    //    this.setState({stadiums:response.data.stadiums});
   
-     });
-    }//End Constructor 
+    //  });
+    // }//End Constructor 
 
-    componentDidMount(){
-        //When the component Loads
-        // this.setState({height:'25%'})
-        // setTimeout(this.setState({height: '25%' }),1000)
-         this.getTeams();
-    }
+    // componentDidMount(){
+    //     //When the component Loads
+    //     // this.setState({height:'25%'})
+    //     // setTimeout(this.setState({height: '25%' }),1000)
+    //      this.getTeams();
+    // }
    
     //Custom API CAll for Group,Team,Flag Data for the Cards on the side of the page
   //This function sets the state for each groupType (GroupA, GroupB). 
   // Use this Data to pass to the cards for displaying flag
-  getTeams(){
-    //Method to get DAta for the Stadium Capacity
-    axios({
-      method: 'get',
-      url:'http://192.168.1.2/api/football/team-groups'
-    }).then((response) =>{
+//   getTeams(){
+//     //Method to get DAta for the Stadium Capacity
+//     axios({
+//       method: 'get',
+//       url:'http://192.168.1.2/api/football/team-groups'
+//     }).then((response) =>{
 
-      console.log(response);
+//       console.log(response);
       
-      for(let i = 0;i<response.data.length;i++){
-        let newStateArray = [];
-        switch(response.data[i].Group){
-          case 'A':
-          newStateArray = this.state.groupA;
-          newStateArray.push({
-            Group: 'A',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupA: newStateArray});
-          break;
+//       for(let i = 0;i<response.data.length;i++){
+//         let newStateArray = [];
+//         switch(response.data[i].Group){
+//           case 'A':
+//           newStateArray = this.state.groupA;
+//           newStateArray.push({
+//             Group: 'A',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupA: newStateArray});
+//           break;
           
-          case 'B':
-          newStateArray = this.state.groupB;
-          newStateArray.push({
-            Group: 'B',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupB:newStateArray});
-          break;
-          case 'C':
-          newStateArray = this.state.groupC;
-          newStateArray.push({
-            Group: 'C',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupC:newStateArray});
-          break;
-          case 'D':
-          newStateArray = this.state.groupD;
-          newStateArray.push({
-            Group: 'D',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupD:newStateArray});
-          break;
-          case 'E':
-          newStateArray = this.state.groupE;
-          newStateArray.push({
-            Group: 'E',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupE:newStateArray});
-          break;
-          case 'F':
-          newStateArray = this.state.groupF;
-          newStateArray.push({
-            Group: 'F',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupF:newStateArray});
-          break;
-          case 'G':
-          newStateArray = this.state.groupG;
-          newStateArray.push({
-            Group: 'G',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupG:newStateArray});
-          break;
-          case 'H':
-          newStateArray = this.state.groupH;
-          newStateArray.push({
-            Group: 'H',
-            Team: response.data[i].Team,
-            Flag: response.data[i].Flag
-          });
-          this.setState({groupH:newStateArray});
-        }
-      }
-      console.log(this.state);
-    });
+//           case 'B':
+//           newStateArray = this.state.groupB;
+//           newStateArray.push({
+//             Group: 'B',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupB:newStateArray});
+//           break;
+//           case 'C':
+//           newStateArray = this.state.groupC;
+//           newStateArray.push({
+//             Group: 'C',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupC:newStateArray});
+//           break;
+//           case 'D':
+//           newStateArray = this.state.groupD;
+//           newStateArray.push({
+//             Group: 'D',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupD:newStateArray});
+//           break;
+//           case 'E':
+//           newStateArray = this.state.groupE;
+//           newStateArray.push({
+//             Group: 'E',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupE:newStateArray});
+//           break;
+//           case 'F':
+//           newStateArray = this.state.groupF;
+//           newStateArray.push({
+//             Group: 'F',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupF:newStateArray});
+//           break;
+//           case 'G':
+//           newStateArray = this.state.groupG;
+//           newStateArray.push({
+//             Group: 'G',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupG:newStateArray});
+//           break;
+//           case 'H':
+//           newStateArray = this.state.groupH;
+//           newStateArray.push({
+//             Group: 'H',
+//             Team: response.data[i].Team,
+//             Flag: response.data[i].Flag
+//           });
+//           this.setState({groupH:newStateArray});
+//         }
+//       }
+//       console.log(this.state);
+//     });
   }
 
   
 
-  findMatch(e){
-      if(e.activeLabel!=null){ 
-        // console.log(e.activeLabel);
-      }
-  }
     render(){
       
         // const { height } = this.state;

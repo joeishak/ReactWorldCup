@@ -20,53 +20,71 @@ class Dashboard extends Component {
       players: []
     };
     this.UpdateAPI = this.UpdateAPI.bind(this);
-   
+    
   }
   UpdateAPI(){
     
-    
+    fetch('http://vm3.infosol.com:8010/extract/footballapi', {
+      method:'POST',
+      headers: {"Content-Type":"application/json"},
+      body: this.state
+    })
+    .then(response => {
+      console.log('The response');
+      console.log(response.json);
+    })
+    .then(data  =>{
+      console.log("The Data");
+      console.log(data);
+    })
+    .catch(err =>{
+      console.log('The err');
+      console.log(err);
+    })
     let today = new Date();
     let day = today.getDate();
     let month = today.getMonth();
     let stringDate = day + '.' + (month+1) + '.2018';
     //Start Football API Get Requests to send to the Node JS API
    // 1. Standings * team data
-   axios.get('http://api.football-api.com/2.0/standings/1056?Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
-   .then( res => {
-     let standings = res.data;
-     this.setState({standings})
-     for(let i = 0; i<31;i++){
-      let team = this.state.standings[i].team_id
-      axios.get('http://api.football-api.com/2.0/team/'+team+'?Authorization=565ec012251f932ea4000001fa542ae9d994470e73fdb314a8a56d76')
-      .then( teamRes =>{
-         let newTeam = teamRes.data;
-         let teams = this.state.teams;
-         teams.push(newTeam);
-         this.setState({teams});
-        //  console.log(this.state);
-      });  
-     }
+  //  axios.get('http://api.football-api.com/2.0/standings/1056?Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
+  //  .then( res => {
+  //    let standings = res.data;
+  //    this.setState({standings})
+  //    for(let i = 0; i<31;i++){
+  //     let team = this.state.standings[i].team_id
+  //     axios.get('http://api.football-api.com/2.0/team/'+team+'?Authorization=565ec012251f932ea4000001fa542ae9d994470e73fdb314a8a56d76')
+  //     .then( teamRes =>{
+  //        let newTeam = teamRes.data;
+  //        let teams = this.state.teams;
+  //        teams.push(newTeam);
+  //        this.setState({teams});
+  //       //  console.log(this.state);
+  //     });  
+  //    }
      
      
     
-   });
+  //  });
 
    // 2. Matches
-   axios.get('http://api.football-api.com/2.0/matches?comp_id=1056&from_date=1.6.2018&to_date='+stringDate+'&Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
-   .then( res => {
-     let matches = res.data;
-     this.setState({matches})
-     // axios.post('localhost/extract/footballapi/',this.state.standings)
-     // .then(postRes => {
-     //   console.log(res.data);
-     // });
-   });
+  //  axios.get('http://api.football-api.com/2.0/matches?comp_id=1056&from_date=1.6.2018&to_date='+stringDate+'&Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
+  //  .then( res => {
+  //    let matches = res.data;
+  //    this.setState({matches})
+  //    // axios.post('localhost/extract/footballapi/',this.state.standings)
+  //    // .then(postRes => {
+  //    //   console.log(res.data);
+  //    // });
+  //  });
    
- axios.post('192.168.1.6:80/extract/footballapi/',this.state)
-     .then(postRes =>{
-       console.log('I got a response');
-       console.log(postRes.data);
-     })
+//  axios.post('http://vm3.infosol.com/extract/footballapi',this.state)
+//      .then(postRes =>{
+//        console.log('I got a response');
+//        console.log(postRes.data);
+//      })
+    
+
  }
   handleNotificationClick(position) {
     var color = Math.floor(Math.random() * 4 + 1);
