@@ -10,167 +10,146 @@ import { style } from "variables/Variables.jsx";
 import dashboardRoutes from "routes/dashboard.jsx";
 
 class Dashboard extends Component {
+
+  
+  //Class Initializer Function
   constructor(props) {
     super(props);
+    //Bind any isntance of these classes methods to keyword this
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.handleNotificationClick = this.handleNotificationClick.bind(this);
+    // this.UpdateAPI = this.UpdateAPI.bind(this);
+    this.UpdateMatches = this.UpdateMatches.bind(this);
+    this.UpdateTeams = this.UpdateTeams.bind(this);
+    this.UpdateAPI = this.UpdateAPI.bind(this);
+    this.CheckForPost = this.CheckForPost.bind(this);
+
+    //Initialize State
     this.state = {
       _notificationSystem: null,
-      teams: [],
-      players: []
+      Teams: [],
+      Standings: [],
+      Matches: [],
+      TotalUpdates:0
+
     };
-    this.UpdateAPI = this.UpdateAPI.bind(this);
-    
+  }//End Constructor
+  componentDidMount() {
+
+    // setInterval(this.UpdateAPI(),180000);
+    // this.UpdateTeams();
+    // this.UpdateMatches();
   }
-  UpdateAPI(){
-    
-    fetch('http://vm3.infosol.com:8010/extract/footballapi', {
-      method:'POST',
-      headers: {"Content-Type":"application/json"},
-      body: this.state
-    })
-    .then(response => {
-      console.log('The response');
-      console.log(response.json);
-    })
-    .then(data  =>{
-      console.log("The Data");
-      console.log(data);
-    })
-    .catch(err =>{
-      console.log('The err');
-      console.log(err);
-    })
+  //Checks Teams to ensure all data has been recieved before posting to the Infosol Custom Api
+  CheckForPost() {
+  //  console.log(this.state.Teams.length);
+    if (this.state.Teams.length == 32) {
+      // console.log("Teams");
+      // console.log(this.state.Teams);
+
+      axios.post('http://localhost:8010/extract/footballapi/Teams', this.state.Teams)
+        .then(customPostRes => {
+          console.log('Teams Sucessfully Updated');
+          // console.log(customPostRes);
+
+        });
+    }
+  }
+  //Function Below Fascilitate Updates to the Infosol Custom Api
+  UpdateAPI() {
+
+    console.log("******* API IS UPDATING ********");
     let today = new Date();
     let day = today.getDate();
-    let month = today.getMonth();
-    let stringDate = day + '.' + (month+1) + '.2018';
-    //Start Football API Get Requests to send to the Node JS API
-   // 1. Standings * team data
-  //  axios.get('http://api.football-api.com/2.0/standings/1056?Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
-  //  .then( res => {
-  //    let standings = res.data;
-  //    this.setState({standings})
-  //    for(let i = 0; i<31;i++){
-  //     let team = this.state.standings[i].team_id
-  //     axios.get('http://api.football-api.com/2.0/team/'+team+'?Authorization=565ec012251f932ea4000001fa542ae9d994470e73fdb314a8a56d76')
-  //     .then( teamRes =>{
-  //        let newTeam = teamRes.data;
-  //        let teams = this.state.teams;
-  //        teams.push(newTeam);
-  //        this.setState({teams});
-  //       //  console.log(this.state);
-  //     });  
-  //    }
-     
-     
-    
-  //  });
+    let month = today.getMonth() + 1;
 
-   // 2. Matches
-  //  axios.get('http://api.football-api.com/2.0/matches?comp_id=1056&from_date=1.6.2018&to_date='+stringDate+'&Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
-  //  .then( res => {
-  //    let matches = res.data;
-  //    this.setState({matches})
-  //    // axios.post('localhost/extract/footballapi/',this.state.standings)
-  //    // .then(postRes => {
-  //    //   console.log(res.data);
-  //    // });
-  //  });
+    day = (day < 10) ? `0${day}` : day;
+    month = (month < 10) ? `0${month}` : month;
+    let stringDate = day + '.' + (month) + '.2018';
+    let NewTeams = [];
+  
+    axios.get('http://api.football-api.com/2.0/standings/1056?Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
+      .then(standingRes => {
+        /**Uncomment when you want to test if you have exceeded API Request Limit */
+        // console.log("The response from the Football-Api.com for Standings: ");
+        // console.log(standingRes);
+
+        let Standings = standingRes.data;
+        
+        this.setState({ Standings: Standings })
+        // console.log("Standings Length: " + this.state.Standings.length);
+
+        axios.post('http://localhost:8010/extract/footballapi/standings', this.state.Standings)
+          .then(customPostRes => {
+            console.log('Standings Sucessfully Updated');
+            // console.log(customPostRes);
+          });
+      }); //End call for Standings
+
+
+      axios.get('http://api.football-api.com/2.0/standings/1056?Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
+      .then(standingRes => {
+        let Standings = standingRes.data;
+        // console.log(Standings);
+        for (let i = 0; i < Standings.length; i++) {
+          let team = Standings[i].team_id
+          axios.get('http://api.football-api.com/2.0/team/' + team + '?Authorization=565ec012251f932ea4000001fa542ae9d994470e73fdb314a8a56d76')
+            .then(teamRes => {
+              // console.log(teamRes);
+              this.setState({ Teams: [...this.state.Teams, teamRes.data] })
+              // this.setState({ Teams: NewTeams });
+              // console.log("Teams Length: " + this.state.Teams.length);
+              this.CheckForPost()
+            });//End Call For Teams
+        }//end for
+
+        
+        // console.log("The Teams state after adding all the New Teams to State:");
+        // console.log(this.state.Teams);
+        // this.CheckForPost();
+      });
+
+      axios.get('http://api.football-api.com/2.0/matches?comp_id=1056&from_date=02.06.2018 &to_date=' + stringDate + '&Authorization=565ec012251f932ea4000001061fbec3b0f34d714a33b597c0415d4c')
+      .then(matchRes => {
+        // console.log("The response from the Football-api.com for the current Matches");
+        // console.log()
+        let Matches = matchRes.data;
+        // console.log('The Matches State after making a request for Current Matches: ')
+        // console.log(Matches);
+        this.setState({ Matches })
+        // console.log("Matches Length:" + this.state.Matches.length);
+        // console.log(this.state.Matches);   
+        
+        axios.post('http://localhost:8010/extract/footballapi/matches', this.state.Matches)
+      .then(customPostRes => {
+        console.log('Matches Sucessfully Updated');
+        // console.log(customPostRes);
+      });
+      });//End Call for Matches
+      this.setState({TotalUpdates: this.state.TotalUpdates+1});
+      console.log("Total Updates to the API: " + this.state.TotalUpdates);
+  }
+  UpdateTeams() {
+
+
+    
    
-//  axios.post('http://vm3.infosol.com/extract/footballapi',this.state)
-//      .then(postRes =>{
-//        console.log('I got a response');
-//        console.log(postRes.data);
-//      })
     
+  }
+  UpdateMatches() {
+   
+    // console.log(stringDate); 
+    // console.log('State before the api calls' );
+    // console.log( this.state);
 
- }
-  handleNotificationClick(position) {
-    var color = Math.floor(Math.random() * 4 + 1);
-    var level;
-    switch (color) {
-      case 1:
-        level = "success";
-        break;
-      case 2:
-        level = "warning";
-        break;
-      case 3:
-        level = "error";
-        break;
-      case 4:
-        level = "info";
-        break;
-      default:
-        break;
-    }
-    this.state._notificationSystem.addNotification({
-      title: <span data-notify="icon" className="pe-7s-gift" />,
-      message: (
-        <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
-        </div>
-      ),
-      level: level,
-      position: position,
-      autoDismiss: 15
-    });
+
+    
+    
   }
-  componentDidMount() {
-    this.UpdateAPI();
-    this.setState({ _notificationSystem: this.refs.notificationSystem });
-    var _notificationSystem = this.refs.notificationSystem;
-    var color = Math.floor(Math.random() * 4 + 1);
-    var level;
-    switch (color) {
-      case 1:
-        level = "success";
-        break;
-      case 2:
-        level = "warning";
-        break;
-      case 3:
-        level = "error";
-        break;
-      case 4:
-        level = "info";
-        break;
-      default:
-        break;
-    }
-    // _notificationSystem.addNotification({
-    //   title: <span data-notify="icon" className="pe-7s-gift" />,
-    //   message: (
-    //     <div>
-    //       Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-    //       every web developer.
-    //     </div>
-    //   ),
-    //   level: level,
-    //   position: "tr",
-    //   autoDismiss: 15
-    // });
-  }
-  componentDidUpdate(e) {
-    if (
-      window.innerWidth < 993 &&
-      e.history.location.pathname !== e.location.pathname &&
-      document.documentElement.className.indexOf("nav-open") !== -1
-    ) {
-      document.documentElement.classList.toggle("nav-open");
-    }
-    if (e.history.action === "PUSH") {
-      document.documentElement.scrollTop = 0;
-      document.scrollingElement.scrollTop = 0;
-      this.refs.mainPanel.scrollTop = 0;
-    }
-  }
+
   render() {
     return (
       <div className="wrapper">
-        {/* <NotificationSystem ref="notificationSystem" style={style} /> */}
+        <NotificationSystem ref="notificationSystem" style={style} />
         {/* <Sidebar {...this.props} /> */}
         {/* {console.log(this.props)} */}
         <div id="" className="" ref="">
@@ -202,6 +181,7 @@ class Dashboard extends Component {
       </div>
     );
   }
+
 }
 
 export default Dashboard;
