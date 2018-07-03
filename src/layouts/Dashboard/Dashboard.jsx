@@ -46,7 +46,7 @@ class Dashboard extends Component {
       // console.log("Teams");
       // console.log(this.state.Teams);
 
-      axios.post('http://localhost:8010/extract/footballapi/Teams', this.state.Teams)
+      axios.post('http://vm3.infosol.com:8010/extract/footballapi/Teams', this.state.Teams)
         .then(customPostRes => {
           console.log('Teams Sucessfully Updated');
           // console.log(customPostRes);
@@ -78,7 +78,7 @@ class Dashboard extends Component {
         this.setState({ Standings: Standings })
         // console.log("Standings Length: " + this.state.Standings.length);
 
-        axios.post('http://localhost:8010/extract/footballapi/standings', this.state.Standings)
+        axios.post('http://vm3.infosol.com:8010/extract/footballapi/standings', this.state.Standings)
           .then(customPostRes => {
             console.log('Standings Sucessfully Updated');
             // console.log(customPostRes);
@@ -119,7 +119,7 @@ class Dashboard extends Component {
         // console.log("Matches Length:" + this.state.Matches.length);
         // console.log(this.state.Matches);   
         
-        axios.post('http://localhost:8010/extract/footballapi/matches', this.state.Matches)
+        axios.post('http://vm3.infosol.com:8010/extract/footballapi/matches', this.state.Matches)
       .then(customPostRes => {
         console.log('Matches Sucessfully Updated');
         // console.log(customPostRes);

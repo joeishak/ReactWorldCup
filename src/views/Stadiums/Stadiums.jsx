@@ -49,7 +49,7 @@ class Stadiums extends Component {
       
     }
    
-    axios.get('http://localhost:8010/extract/footballapi/viz')
+    axios.get('http://vm3.infosol.com:8010/extract/footballapi/viz')
     .then( response => {
       this.setState({app:  <Chart
       className ='comboBar'
